@@ -1,34 +1,18 @@
-// src/App.jsx
-
-import { useState, useEffect } from 'react';
 import './App.css';
-import { parseMarkdown } from './utils/markdown';
-import { getMarkdown, saveMarkdown } from './utils/storage';
+import { useMarkdown } from '../hooks/useMarkdown';
+import MarkdownPreview from './MarkdownPreview';
 
 function App() {
-    const [markdown, setMarkdown] = useState('');
+    const { markdown, updateMarkdown } = useMarkdown();
 
-    useEffect(() => {
-        const stored = getMarkdown();
-        setMarkdown(stored);
-    }, []);
-
-    const handleChange = (e) => {
-        const value = e.target.value;
-        setMarkdown(value);
-        saveMarkdown(value);
+    const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+        updateMarkdown(e.target.value);
     };
 
     return (
         <div className="App">
-      <textarea
-          value={markdown}
-          onChange={handleChange}
-      />
-            <div
-                className="preview"
-                dangerouslySetInnerHTML={{ __html: parseMarkdown(markdown) }}
-            />
+            <textarea value={markdown} onChange={handleChange} />
+            <MarkdownPreview content={markdown} />
         </div>
     );
 }
